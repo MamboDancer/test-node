@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("./partials/links.ejs") %>
+    <script  src="https://unpkg.com/vue@3.2.47"></script>
+    <title><%= title %></title>
+    
+</head>
+<body>
+    <% if(!isLogged){ %>
+    <div class="auth">
+        <div class="auth-choose-method">
+            <button class="chosen">Login</button>
+            <button >Register</button>
+        </div>
+        <div class="login-panel" id="login-panel">
+            <form class="auth-panel" id="login-form" @submit.prevent="loginUser">
+                <p>User</p>
+                <input type="text" v-model="user" >
+                <p>Password</p>
+                <input type="password" v-model="pass">
+                <button>Login</button>
+            </form>
+        </div>
+        
+        <div class="reg-panel" id="reg-panel">
+            <form class="auth-panel" id="reg-form" @submit="regUser">
+                <p>User</p>
+                <input type="text" v-model="user" required>
+                <p>Password</p>
+                <input type="password" v-model="pass" required>
+                <button>Reg</button>
+            </form>
+        </div>
+    </div>
+    <%} %>
+   
+    <form action="/logout" method="POST">
+        <button>LOGOUT</button>
+    </form>
+    <% if(isLogged){ %>
+    <div id="app" class="wrapper">
+        <% if(isAdmin){ %>
+            <form @submit.prevent="createServer">
+                <input type="text" v-model="name">
+                <input type="text" v-model="descr">
+                <input type="text" v-model="quanity">
+                <input type="text" v-model="price">
+                <button type="submit">send</button>
+            </form>
+        <%} %> <!--If !admin-->
+        <div v-if="servers.length === 0" class="loading-message">
+            <h3>Loading the DataBase, please wait...</h3>
+            <p>If no result - db might be empty</p>
+        </div>
+        <table class="main-table" v-else>
+            <tr class="table-header">
+                <td>Name</td>
+                <td>Description</td>
+                <td>Quanity</td>
+                <td>Price</td>
+            </tr>
+            <tr class="table-item" v-for="server in servers" @dblclick="changeRow(server.id)">
+                    <td id="element-id" >{{server.id}}</td>
+                    <td class="table-item-name">{{server.name}}</td>
+                    <td class="table-item-desc">{{server.descr}}</td>
+                    <td class="table-item-quaniny">{{server.quanity}}</td>
+                    <td class="table-item-price">{{server.price}}</td>
+            </tr>
+        </table>
+        <form @submit.prevent="refresh">
+            <button>refresh</button>
+        </form>
+        <% if(isAdmin){ %>
+        <div class="edit-form">
+            <form @submit.prevent="">
+                <h2>Edit Row</h2>
+                <p>Name</p>
+                <input type="text" id="name-input" v-model="ename">
+                <p>Description</p>
+                <input type="text" id="descr-input" v-model="edescr">
+                <p>Quanity</p>
+                <input type="number" id="quanity-input" v-model="equanity">
+                <p>Price</p>
+                <input type="number" id="price-input" v-model="eprice"> <br>
+                <div class="edit-form-buttons">
+                    <button @click="updateRow">Edit</button>
+                    <button @click="closeForm">Cancel</button>
+                </div>
+                <button @click="deleteRow">Delete Row</button>
+            </form>
+        </div>
+        <%} %><!--If admin-->
+    </div>
+       
+   
+
+
+
+    <%} %><!--If logged in-->
+    <script src="/app.vue"></script>
+   <!-- <form action="uploadimage" method="post" enctype="multipart/form-data">
+        <input type="file" name="formImage">
+        <button>Upload to server</button>
+    </form>
+    <img src="/images/1.jpg" width="300px">
+    -->
+</body>
+</html>
