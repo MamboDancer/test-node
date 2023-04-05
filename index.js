@@ -21,7 +21,7 @@ app.use(express.static(path.resolve(__dirname, 'static')))
 
 app.use(cookieParser())
 app.use(session({
-    secret: 'gavnopidar',
+    secret: 'supersecretsecret',
     saveUninitialized: true,
     resave: false,
     cookie: {maxAge:9999999}
